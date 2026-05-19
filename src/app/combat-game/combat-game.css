@@ -1,111 +1,54 @@
-:host {
-  display: block;
-  height: 100vh;
-  height: 100dvh;
-  background: #0f172a;
-  overflow: hidden;
-  font-family: 'Inter', sans-serif;
-  width: 100%;
-  box-sizing: border-box;
-}
+:host { display: block; height: 100vh; background: #0f172a; overflow: hidden; font-family: 'Inter', sans-serif; }
+    
+    @keyframes windmill-l { 0% { transform: rotate(0deg); } 100% { transform: rotate(-360deg); } }
+    @keyframes windmill-r { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    
+    @keyframes nobita-lunge {
+      0% { transform: translateX(0); }
+      30% { transform: translateX(120px); }
+      100% { transform: translateX(0); }
+    }
 
-@keyframes windmill-l {
-  0%   { transform: rotate(0deg); }
-  100% { transform: rotate(-360deg); }
-}
+    @keyframes nobita-jab-front {
+      0% { transform: translateX(0) scaleX(1); }
+      30% { transform: translateX(60px) scaleX(1.4); }
+      100% { transform: translateX(0) scaleX(1); }
+    }
 
-@keyframes windmill-r {
-  0%   { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
+    @keyframes nobita-jab-back {
+      0% { transform: translateX(0); }
+      30% { transform: translateX(40px) translateY(-10px); }
+      100% { transform: translateX(0); }
+    }
 
-@keyframes nobita-lunge {
-  0%   { transform: translateX(0); }
-  30%  { transform: translateX(clamp(40px, 10vw, 120px)); }
-  100% { transform: translateX(0); }
-}
+    @keyframes kick-leg {
+      0% { transform: rotate(0deg); }
+      30% { transform: rotate(-135deg) translateY(-40px) translateX(50px); }
+      100% { transform: rotate(0deg); }
+    }
 
-@keyframes nobita-jab-front {
-  0%   { transform: translateX(0) scaleX(1); }
-  30%  { transform: translateX(clamp(20px, 5vw, 60px)) scaleX(1.4); }
-  100% { transform: translateX(0) scaleX(1); }
-}
+    .animate-punch-front { animation: nobita-jab-front 0.25s ease-out; }
+    .animate-punch-back { animation: nobita-jab-back 0.25s ease-out; }
+    .animate-kick { animation: kick-leg 0.3s ease-out; }
+    .animate-nobita-lunge { animation: nobita-lunge 0.3s ease-out; }
+    @keyframes hit-text-float {
+      0% { opacity: 0; transform: translateY(0) scale(0.5); }
+      20% { opacity: 1; transform: translateY(-40px) scale(1.2); }
+      100% { opacity: 0; transform: translateY(-100px) scale(1); }
+    }
 
-@keyframes nobita-jab-back {
-  0%   { transform: translateX(0); }
-  30%  { transform: translateX(clamp(14px, 3.5vw, 40px)) translateY(-10px); }
-  100% { transform: translateX(0); }
-}
+    .animate-hit { animation: character-hit 0.3s ease-out; }
+    .animate-walk { animation: walk-cycle 0.45s infinite ease-in-out; }
+    .hit-indicator { animation: hit-text-float 0.8s ease-out forwards; }
 
-@keyframes kick-leg {
-  0%   { transform: rotate(0deg); }
-  30%  { transform: rotate(-135deg) translateY(clamp(-20px, -4vw, -40px)) translateX(clamp(20px, 4vw, 50px)); }
-  100% { transform: rotate(0deg); }
-}
+    .spark {
+      position: absolute;
+      pointer-events: none;
+      z-index: 100;
+      animation: spark-pop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
 
-@keyframes hit-text-float {
-  0%   { opacity: 0;  transform: translateY(0) scale(0.5); }
-  20%  { opacity: 1;  transform: translateY(clamp(-20px, -4vw, -40px)) scale(1.2); }
-  100% { opacity: 0;  transform: translateY(clamp(-50px, -8vw, -100px)) scale(1); }
-}
-
-@keyframes character-hit {
-  0%   { transform: translateX(0); }
-  30%  { transform: translateX(clamp(6px, 1.5vw, 12px)); }
-  60%  { transform: translateX(clamp(-6px, -1.5vw, -12px)); }
-  100% { transform: translateX(0); }
-}
-
-@keyframes walk-cycle {
-  0%   { transform: translateY(0); }
-  50%  { transform: translateY(-4px); }
-  100% { transform: translateY(0); }
-}
-
-@keyframes spark-pop {
-  0%   { transform: scale(0) rotate(0);    opacity: 1; }
-  100% { transform: scale(6) rotate(180deg); opacity: 0; }
-}
-
-.animate-punch-front  { animation: nobita-jab-front 0.25s ease-out; }
-.animate-punch-back   { animation: nobita-jab-back  0.25s ease-out; }
-.animate-kick         { animation: kick-leg          0.3s  ease-out; }
-.animate-nobita-lunge { animation: nobita-lunge      0.3s  ease-out; }
-.animate-hit          { animation: character-hit     0.3s  ease-out; }
-.animate-walk         { animation: walk-cycle        0.45s infinite ease-in-out; }
-
-.hit-indicator {
-  animation: hit-text-float 0.8s ease-out forwards;
-}
-
-.spark {
-  position: absolute;
-  pointer-events: none;
-  z-index: 100;
-  animation: spark-pop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-}
-
-@media only screen and (max-width: 480px) {
-  @keyframes spark-pop {
-      0%   { transform: scale(0) rotate(0);   opacity: 1; }
-      100% { transform: scale(3) rotate(180deg); opacity: 0; }
-  }
-
-  .animate-punch-front  { animation-duration: 0.2s; }
-  .animate-punch-back   { animation-duration: 0.2s; }
-  .animate-kick         { animation-duration: 0.25s; }
-  .animate-nobita-lunge { animation-duration: 0.25s; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .animate-punch-front,
-  .animate-punch-back,
-  .animate-kick,
-  .animate-nobita-lunge,
-  .animate-hit,
-  .animate-walk,
-  .hit-indicator,
-  .spark {
-      animation: none;
-  }
-}
+    @keyframes spark-pop {
+      0% { transform: scale(0) rotate(0); opacity: 1; }
+      100% { transform: scale(6) rotate(180deg); opacity: 0; }
+    }
