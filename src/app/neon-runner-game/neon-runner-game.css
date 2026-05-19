@@ -1,3 +1,27 @@
 .clip-triangle {
-    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+  width: clamp(40px, 10vw, 100px);
+  height: clamp(35px, 9vw, 90px);
+  box-sizing: border-box;
+}
+
+@media only screen and (max-width: 480px) {
+  .clip-triangle {
+      width: clamp(30px, 8vw, 60px);
+      height: clamp(26px, 7vw, 52px);
   }
+}
+
+@media only screen and (max-width: 393px) {
+  .clip-triangle {
+      width: clamp(24px, 7vw, 48px);
+      height: clamp(20px, 6vw, 42px);
+  }
+}
+
+@media only screen and (min-width: 481px) and (max-width: 768px) {
+  .clip-triangle {
+      width: clamp(50px, 9vw, 80px);
+      height: clamp(44px, 8vw, 70px);
+  }
+}
