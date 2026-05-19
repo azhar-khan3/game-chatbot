@@ -1,0 +1,91 @@
+<div class="min-h-screen bg-neutral-950 flex flex-col items-center justify-center font-sans overflow-hidden select-none p-4">
+      
+    <div class="w-full max-w-4xl flex justify-between items-end mb-6 px-2">
+      <div class="flex flex-col">
+        <span class="text-emerald-500 text-xs uppercase tracking-[0.2em] font-bold">Distance</span>
+        <span class="text-5xl font-black text-white tabular-nums drop-shadow-[0_0_10px_rgba(16,185,129,0.4)]">
+          {{ distance() }}<span class="text-lg ml-1 text-emerald-800">m</span>
+        </span>
+      </div>
+      
+      <div class="flex flex-col items-end">
+        <span class="text-neutral-500 text-xs uppercase tracking-widest font-bold">Best Record</span>
+        <span class="text-2xl font-bold text-neutral-300 tabular-nums">{{ highScore() }}m</span>
+      </div>
+    </div>
+
+    <div 
+      class="relative w-full max-w-4xl aspect-[21/9] bg-neutral-900 rounded-3xl border-b-8 border-emerald-600 shadow-2xl overflow-hidden cursor-pointer"
+      (mousedown)="handleAction()"
+      (touchstart)="handleAction()"
+    >
+      <!-- Scrolling Grid Background -->
+      <div 
+        class="absolute inset-0 opacity-20"
+        [style.background-image]="'linear-gradient(#333 1px, transparent 1px), linear-gradient(90deg, #333 1px, transparent 1px)'"
+        [style.background-size]="'40px 40px'"
+        [style.transform]="'translateX(' + (-(distance() * 2) % 40) + 'px)'"
+      ></div>
+
+      <div 
+        class="absolute left-20 transition-transform duration-75"
+        [style.bottom.px]="playerY()"
+        [style.transform]="'rotate(' + playerRotation() + 'deg)'"
+      >
+        <div class="relative w-12 h-12 bg-emerald-500 rounded-lg shadow-[0_0_20px_rgba(16,185,129,0.8)] flex items-center justify-center">
+          <div class="w-6 h-2 bg-emerald-900/30 rounded-full mb-2"></div>
+          <!-- Jump Particles -->
+          @if (isJumping()) {
+            <div class="absolute -bottom-2 w-8 h-1 bg-emerald-400/50 blur-sm animate-pulse"></div>
+          }
+        </div>
+      </div>
+
+      @for (obs of obstacles(); track obs.id) {
+        <div 
+          class="absolute bottom-0"
+          [style.left.px]="obs.x"
+          [style.width.px]="obs.width"
+          [style.height.px]="obs.height"
+        >
+          @if (obs.type === 'spike') {
+            <div class="w-full h-full bg-rose-600 clip-triangle shadow-[0_0_15px_rgba(225,29,72,0.6)]"></div>
+          } @else {
+            <div class="w-full h-full bg-rose-500 rounded-t-md border-t-4 border-rose-300"></div>
+          }
+        </div>
+      }
+
+      @if (gameState() === 'idle') {
+        <div class="absolute inset-0 z-30 flex flex-col items-center justify-center bg-black/60 backdrop-blur-sm">
+          <h1 class="text-6xl font-black text-white mb-4 italic tracking-tighter">NEON<span class="text-emerald-500">RUN</span></h1>
+          <p class="text-neutral-400 mb-8 font-medium px-6 text-center">Tap or Space to Jump over obstacles</p>
+          <button 
+            (click)="startGame($event)"
+            class="px-10 py-4 bg-emerald-600 text-white font-bold text-xl rounded-full hover:bg-emerald-500 transition-all active:scale-95 shadow-lg shadow-emerald-900/20"
+          >
+            INITIALIZE RUN
+          </button>
+        </div>
+      }
+
+      @if (gameState() === 'gameover') {
+        <div class="absolute inset-0 z-40 flex flex-col items-center justify-center bg-rose-950/80 backdrop-blur-md">
+          <span class="text-rose-400 font-bold uppercase tracking-widest mb-2">System Crash</span>
+          <h2 class="text-7xl font-black text-white mb-6">{{ distance() }}<span class="text-2xl">m</span></h2>
+          <button 
+            (click)="startGame($event)"
+            class="px-8 py-3 bg-white text-rose-600 rounded-full font-bold text-lg hover:bg-rose-50 transition-colors"
+          >
+            REBOOT SYSTEM
+          </button>
+        </div>
+      }
+    </div>
+
+    <div class="mt-8 grid grid-cols-3 gap-8 text-neutral-500 text-xs font-bold uppercase tracking-widest">
+      <div class="flex flex-col items-center"><span class="text-neutral-400 mb-1">Space</span><span>Jump</span></div>
+      <div class="flex flex-col items-center"><span class="text-neutral-400 mb-1">Speed</span><span>{{ currentSpeed().toFixed(1) }}x</span></div>
+      <div class="flex flex-col items-center"><span class="text-neutral-400 mb-1">Action</span><span>Avoid Rose</span></div>
+    </div>
+  </div>

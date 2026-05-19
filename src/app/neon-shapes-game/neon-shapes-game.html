@@ -1,0 +1,90 @@
+<div class="min-h-screen bg-slate-950 flex flex-col items-center justify-center font-sans overflow-hidden select-none p-4">
+      
+    <div class="w-full max-w-2xl flex justify-between items-end mb-4 px-4 z-20">
+      <div class="flex flex-col">
+        <span class="text-slate-500 text-xs uppercase tracking-widest font-bold">Score</span>
+        <span class="text-4xl font-black text-indigo-400 drop-shadow-[0_0_10px_rgba(129,140,248,0.5)]">{{ score() }}</span>
+      </div>
+      
+      <div class="flex flex-col items-center">
+        <span class="text-slate-500 text-xs uppercase tracking-widest font-bold mb-1">Lives</span>
+        <div class="flex space-x-2">
+          @for (life of [1,2,3]; track $index) {
+            <div class="w-4 h-4 rounded-full transition-all duration-300" 
+                 [class]="lives() > $index ? 'bg-rose-500 shadow-[0_0_8px_rgba(244,63,94,0.8)]' : 'bg-slate-800'">
+            </div>
+          }
+        </div>
+      </div>
+
+      <div class="flex flex-col items-end">
+        <span class="text-slate-500 text-xs uppercase tracking-widest font-bold">Best</span>
+        <span class="text-2xl font-bold text-slate-300">{{ highScore() }}</span>
+      </div>
+    </div>
+
+    <div class="relative w-full max-w-2xl aspect-[3/4] bg-slate-900/50 rounded-3xl border-2 border-slate-800 shadow-2xl overflow-hidden cursor-crosshair">
+      
+      <!-- Game Elements -->
+      @for (item of items(); track item.id) {
+        <div 
+          (mousedown)="onHit(item.id, $event)"
+          (touchstart)="onHit(item.id, $event)"
+          class="absolute cursor-pointer transition-transform hover:scale-110 active:scale-90"
+          [style.left.%]="item.x"
+          [style.top.px]="item.y"
+          [style.width.px]="item.size"
+          [style.height.px]="item.size"
+        >
+          <!-- SVG Shapes -->
+          @if (item.type === 'circle') {
+            <div class="w-full h-full rounded-full border-4 shadow-inner animate-pulse" 
+                 [style.border-color]="item.color"
+                 [style.box-shadow]="'0 0 15px ' + item.color"></div>
+          } @else if (item.type === 'square') {
+            <div class="w-full h-full border-4 rotate-45" 
+                 [style.border-color]="item.color"
+                 [style.box-shadow]="'0 0 15px ' + item.color"></div>
+          } @else {
+            <div class="w-0 h-0 border-l-[20px] border-r-[20px] border-b-[35px] border-l-transparent border-r-transparent" 
+                 [style.border-b-color]="item.color"
+                 [style.filter]="'drop-shadow(0 0 8px ' + item.color + ')'"></div>
+          }
+        </div>
+      }
+
+      <!-- Start Screen -->
+      @if (gameState() === 'idle') {
+        <div class="absolute inset-0 z-30 flex flex-col items-center justify-center bg-slate-950/80 backdrop-blur-sm animate-in fade-in duration-500">
+          <h1 class="text-6xl font-black text-white mb-2 tracking-tighter italic">NEON<span class="text-indigo-500">FALL</span></h1>
+          <p class="text-slate-400 mb-8 font-medium">Click the shapes before they hit the ground</p>
+          <button 
+            (click)="startGame()"
+            class="group relative px-8 py-4 bg-indigo-600 rounded-2xl text-white font-bold text-xl hover:bg-indigo-500 transition-all active:scale-95 shadow-xl shadow-indigo-500/20"
+          >
+            Start Mission
+            <div class="absolute -inset-1 bg-indigo-500 rounded-2xl blur opacity-30 group-hover:opacity-60 transition duration-1000 group-hover:duration-200"></div>
+          </button>
+        </div>
+      }
+
+      <!-- Game Over Screen -->
+      @if (gameState() === 'gameover') {
+        <div class="absolute inset-0 z-40 flex flex-col items-center justify-center bg-rose-950/90 backdrop-blur-md animate-in zoom-in duration-300">
+          <span class="text-rose-400 font-bold uppercase tracking-[0.3em] mb-2">Simulation Terminated</span>
+          <h2 class="text-7xl font-black text-white mb-6">{{ score() }}</h2>
+          <button 
+            (click)="startGame()"
+            class="px-8 py-3 bg-white text-rose-600 rounded-xl font-bold text-lg hover:bg-rose-50 transition-colors active:scale-95"
+          >
+            Try Again
+          </button>
+        </div>
+      }
+    </div>
+
+    <div class="mt-8 text-slate-600 text-sm font-medium flex items-center space-x-4">
+      <span>● Speed increases every 10 points</span>
+      <span>● Don't let them drop!</span>
+    </div>
+  </div>
